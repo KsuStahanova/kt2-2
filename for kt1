@@ -1,0 +1,224 @@
+//Заказ покупателя
+@Entity
+@Table(name = "customer_order")
+public class CustomerOrder {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String customerName;
+    private String customerAddress;
+    private String customerPhone;
+    private String customerEmail;
+
+    private String productName;
+    private Integer productQuantity;
+    private BigDecimal productPrice;
+
+    private BigDecimal totalAmount;
+    private Date orderDate;
+
+}
+
+
+//Счет
+@Entity
+@Table(name = "invoice")
+public class Invoice {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String customerName;
+    private String customerAddress;
+    private String customerPhone;
+    private String customerEmail;
+
+    private String productName;
+    private Integer productQuantity;
+    private BigDecimal productPrice;
+
+    private BigDecimal totalAmount;
+    private Date invoiceDate;
+
+    private String invoiceNumber;
+
+  
+}
+
+
+//Документ оплаты
+@Entity
+@Table(name = "payment_document")
+public class PaymentDocument {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String customerName;
+    private String customerAddress;
+    private String customerPhone;
+    private String customerEmail;
+
+    private String invoiceNumber;
+    private BigDecimal paymentAmount;
+    private Date paymentDate;
+
+    private String paymentMethod;
+
+}
+
+
+//Накладная, Акт
+@Entity
+@Table(name = "shipment_note")
+public class ShipmentNote {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String customerName;
+    private String customerAddress;
+    private String customerPhone;
+    private String customerEmail;
+
+    private String productName;
+    private Integer productQuantity;
+    private BigDecimal productPrice;
+
+    private BigDecimal totalAmount;
+    private Date shipmentDate;
+
+    private String shipmentNumber;
+
+  
+}
+
+
+
+
+
+
+
+
+//Контроллер заказа покупателя
+
+@Controller
+@RequestMapping("/order")
+public class CustomerOrderController {
+
+    @Autowired
+    private CustomerOrderService customerOrderService;
+
+    @GetMapping
+    public String showOrderForm(Model model) {
+        model.addAttribute("order", new CustomerOrder());
+        return "order";
+    }
+
+    @PostMapping
+    public String saveOrder(@Valid @ModelAttribute("order") CustomerOrder order, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "order";
+        }
+
+        customerOrderService.save(order);
+        return "redirect:/order";
+    }
+}
+
+
+//Контроллер счета
+
+
+@Controller
+@RequestMapping("/invoice")
+public class InvoiceController {
+
+    @Autowired
+    private InvoiceService invoiceService;
+
+    @GetMapping
+    public String showInvoiceForm(Model model) {
+        model.addAttribute("invoice", new Invoice());
+        return "invoice";
+    }
+
+    @PostMapping
+    public String saveInvoice(@Valid @ModelAttribute("invoice") Invoice invoice, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "invoice";
+        }
+
+        invoiceService.save(invoice);
+        return "redirect:/invoice";
+    }
+}
+
+
+//Контроллер документа оплаты
+
+
+@Controller
+@RequestMapping("/payment")
+public class PaymentDocumentController {
+
+    @Autowired
+    private PaymentDocumentService paymentDocumentService;
+
+    @GetMapping
+    public String showPaymentForm(Model model) {
+        model.addAttribute("payment", new PaymentDocument());
+        return "payment";
+    }
+
+    @PostMapping
+    public String savePayment(@Valid @ModelAttribute("payment") PaymentDocument payment, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "payment";
+        }
+
+        paymentDocumentServi
+ce.save(payment);
+        return "redirect:/payment";
+    }
+}
+
+*Контроллер накладной, акта*
+
+@Controller@RequestMapping("/shipment")
+public class ShipmentNoteController {
+
+    @Autowired
+    private ShipmentNoteService shipmentNoteService;
+
+    @GetMapping
+    public String showShipmentForm(Model model) {
+        model.addAttribute("shipment", new ShipmentNote());
+        return "shipment";
+    }
+
+    @PostMapping
+    public String saveShipment(@Valid @ModelAttribute("shipment") ShipmentNote shipment, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "shipment";
+        }
+
+        shipmentNoteService.save(shipment);
+        return "redirect:/shipment";
+    }
+}
+
+
+
+
+
+//
+//
+
+
+
