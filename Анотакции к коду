@@ -1,0 +1,228 @@
+> ChatGPT4 | Midjourney:
+Аннотации:
+
+Waybill.java
+
+import javax.persistence.*;
+
+@Entity
+public class Waybill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int waybillId;
+    private String products;
+    private Date shippingDate;
+
+    // Связь с классом заказа
+    @OneToOne
+    private Order order;
+
+
+PaymentDocument.java
+
+import javax.persistence.*;
+
+@Entity
+public class PaymentDocument {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int paymentId;
+    private double paymentAmount;
+    private Date paymentDate;
+
+    // Связь с классом счета
+    @OneToOne
+    private Invoice invoice;
+
+
+Order.java
+
+import javax.persistence.*;
+
+@Entity
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderId;
+    private double totalAmount;
+    private Date orderDate;
+
+    // Связи с другими классами
+    @OneToOne(mappedBy = "order")
+    private Invoice invoice;
+    @OneToOne(mappedBy = "order")
+    private Waybill waybill;
+
+
+Invoice.java
+
+import javax.persistence.*;
+
+@Entity
+public class Invoice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int invoiceId;
+    private double amount;
+    private Date invoiceDate;
+
+    // Связь с классом заказа
+    @OneToOne
+    private Order order;
+
+
+DocumentServiceImpl.java
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class DocumentServiceImpl implements DocumentService {
+    // ...
+}
+
+
+Исправленный код:
+
+Waybill.java
+
+package com.example.kt1;
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+public class Waybill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int waybillId;
+    private String products;
+    private Date shippingDate;
+
+    // Связь с классом заказа
+    @OneToOne
+    private Order order;
+
+    @Override
+    public String toString() {
+        return "Waybill{" +
+                "waybillId=" + waybillId +
+                ", products='" + products + '\'' +
+                ", shippingDate=" + shippingDate +
+                ", order=" + order +
+                '}';
+    }
+}
+
+
+PaymentDocument.java
+
+package com.example.kt1;
+
+
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+public class PaymentDocument {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int paymentId;
+    private double paymentAmount;
+    private Date paymentDate;
+
+    // Связь с классом счета
+    @OneToOne
+    private Invoice invoice;
+
+    @Override
+    public String toString() {
+        return "PaymentDocument{" +
+                "paymentId=" + paymentId +
+                ", paymentAmount=" + paymentAmount +
+                ", paymentDate=" + paymentDate +
+                ", invoice=" + invoice +
+                '}';
+    }
+}
+
+
+Order.java
+
+package com.example.kt1;
+
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderId;
+    private double totalAmount;
+    private Date orderDate;
+
+    // Связи с другими классами
+    @OneToOne(mappedBy = "order")
+    private Invoice invoice;
+    @OneToOne(mappedBy = "order")
+    private Waybill waybill;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", totalAmount=" + totalAmount +
+                ", orderDate=" + orderDate +
+                ", invoice=" + invoice +
+                ", waybill=" + waybill +
+                '}';
+    }
+}
+
+
+Invoice.java
+
+package com.example.kt1;
+
+
+import java.util.Date;
+
+import javax.persistence.*;
+
+@Entity
+public class Invoice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int invoiceId;
+    private double amount;
+    private Date invoiceDate;
+
+> ChatGPT4 | Midjourney:
+// Связь с классом заказа
+    @OneToOne
+    private Order order;
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId=" + invoiceId +
+                ", amount=" + amount +
+                ", invoiceDate=" + invoiceDate +
+                ", order=" + order +
+                '}';
+    }
+}
+
+*DocumentServiceImpl.java*
+
+java
+package com.example.kt1;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class DocumentServiceImpl implements DocumentService {
+    // ...
+}
