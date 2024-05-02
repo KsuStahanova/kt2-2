@@ -1,0 +1,468 @@
+
+
+Waybill.java
+
+package com.example.kt1;
+import java.util.Date;
+public class Waybill {
+    private int waybillId;
+    private String products;
+    private Date shippingDate;
+
+    // Связь с классом заказа
+    private Order order;
+
+    @Override
+    public String toString() {
+        return "Waybill{" +
+                "waybillId=" + waybillId +
+                ", products='" + products + '\'' +
+                ", shippingDate=" + shippingDate +
+                ", order=" + order +
+                '}';
+    }
+}
+
+
+PaymentDocument.java
+
+package com.example.kt1;
+import java.util.Date;
+public class PaymentDocument {
+    private int paymentId;
+    private double paymentAmount;
+    private Date paymentDate;
+
+    // Связь с классом счета
+    private Invoice invoice;
+
+    @Override
+    public String toString() {
+        return "PaymentDocument{" +
+                "paymentId=" + paymentId +
+                ", paymentAmount=" + paymentAmount +
+                ", paymentDate=" + paymentDate +
+                ", invoice=" + invoice +
+                '}';
+    }
+}
+
+
+Order.java
+
+package com.example.kt1;
+import java.util.Date;
+public class Order {
+    private int orderId;
+    private double totalAmount;
+    private Date orderDate;
+
+    // Связи с другими классами
+    private Invoice invoice;
+    private Waybill waybill;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", totalAmount=" + totalAmount +
+                ", orderDate=" + orderDate +
+                ", invoice=" + invoice +
+                ", waybill=" + waybill +
+                '}';
+    }
+}
+
+
+Invoice.java
+
+package com.example.kt1;
+import java.util.Date;
+public class Invoice {
+    private int invoiceId;
+    private double amount;
+    private Date invoiceDate;
+
+    // Связь с классом заказа
+    private Order order;
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId=" + invoiceId +
+                ", amount=" + amount +
+                ", invoiceDate=" + invoiceDate +
+                ", order=" + order +
+                '}';
+    }
+}
+
+
+DocumentServiceImpl.java
+
+package com.example.kt1;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+@Service
+public class DocumentServiceImpl implements DocumentService {
+    private List<Object> documents = new ArrayList<>();
+    public void createOrder(Order order, Invoice invoice, Waybill waybill) {
+        documents.add(order);
+        documents.add(invoice);
+        documents.add(waybill);
+    }
+    public void createInvoice(Invoice invoice, Order order) {
+        documents.add(invoice);
+        documents.add(order);
+    }
+    public void createPaymentDocument(PaymentDocument paymentDocument, Invoice invoice) {
+        documents.add(paymentDocument);
+        documents.add(invoice);
+    }
+    public void createWaybill(Waybill waybill, Order order) {
+        documents.add(waybill);
+        documents.add(order);
+    }
+    public void displayAllDocuments() {
+        for (Object document : documents) {
+            System.out.println(document);
+        }
+    }
+}
+
+
+Исправленные html страницы:
+
+index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+</head>
+<body>
+    <h1>Главная страница</h1>
+    <a href="/orders">Заказы</a>
+    <a href="/invoices">Счета</a>
+    <a href="/paymentDocuments">Платежные документы</a>
+    <a href="/waybills">Накладные</a>
+</body>
+</html>
+
+
+orders.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказы</title>
+</head>
+<body>
+    <h1>Заказы</h1>
+    <ul>
+        <li><a href="/orders/1">Заказ 1</a></li>
+        <li><a href="/orders/2">Заказ 2</a></li>
+        <
+
+
+li><a href="/orders/3">Заказ 3</a></li>
+    </ul>
+</body>
+</html>
+
+*invoices.html*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Счета</title>
+</head>
+<body>
+    <h1>Счета</h1>
+    <ul>
+        <li><a href="/invoices/1">Счет 1</a></li>
+        <li><a href="/invoices/2">Счет 2</a></li>
+        <li><a href="/invoices/3">Счет 3</a></li>
+    </ul>
+</body>
+</html>
+
+*paymentDocuments.html*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Платежные документы</title>
+</head>
+<body>
+    <h1>Платежные документы</h1>
+    <ul>
+        <li><a href="/paymentDocuments/1">Платежный документ 1</a></li>
+        <li><a href="/paymentDocuments/2">Платежный документ 2</a></li>
+        <li><a href="/paymentDocuments/3">Платежный документ 3</a></li>
+    </ul>
+</body>
+</html>
+
+*waybills.html*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Накладные</title>
+</head>
+<body>
+    <h1>Накладные</h1>
+    <ul>
+        <li><a href="/waybills/1">Накладная 1</a></li>
+        <li><a href="/waybills/2">Накладная 2</a></li>
+        <li><a href="/waybills/3">Накладная 3</a></li>
+    </ul>
+</body>
+</html>
+
+
+
+
+
+
+
+
+Реализации Service классов для моделей:
+
+OrderService.java:
+
+Java
+
+@Service
+public class OrderServiceImpl implements OrderService {
+    private List<Order> orders = new ArrayList<>();
+
+    @Override
+    public void createOrder(Order order, Invoice invoice, Waybill waybill) {
+        orders.add(order);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orders;
+    }
+
+    @Override
+    public Order getOrderById(int id) {
+        for (Order order : orders) {
+            if (order.getOrderId() == id) {
+                return order;
+            }
+        }
+        return null;
+    }
+}
+
+InvoiceService.java:
+
+Java
+
+@Service
+public class InvoiceService implements IInvoiceService {
+    private List<Invoice> invoices = new ArrayList<>();
+
+    @Override
+    public void createInvoice(Invoice invoice, Order order) {
+        invoices.add(invoice);
+    }
+
+    @Override
+    public List<Invoice> getAllInvoices() {
+        return invoices;
+    }
+
+    @Override
+    public Invoice getInvoiceById(int id) {
+        for (Invoice invoice : invoices) {
+            if (invoice.getInvoiceId() == id) {
+                return invoice;
+            }
+        }
+        return null;
+    }
+}
+
+PaymentDocumentService.java:
+
+Java
+
+@Service
+public class PaymentDocumentService implements IPaymentDocumentService {
+    private List<PaymentDocument> paymentDocuments = new ArrayList<>();
+
+    @Override
+    public void createPaymentDocument(PaymentDocument paymentDocument, Invoice invoice) {
+        paymentDocuments.add(paymentDocument);
+    }
+
+    @Override
+    public List<PaymentDocument> getAllPaymentDocuments() {
+        return paymentDocuments;
+    }
+
+    @Override
+    public PaymentDocument getPaymentDocumentById(int id) {
+        for (PaymentDocument paymentDocument : paymentDocuments) {
+            if (paymentDocument.getPaymentId() == id) {
+                return paymentDocument;
+            }
+        }
+        return null;
+    }
+}
+
+WaybillService.java:
+
+Java
+
+@Service
+public class WaybillService implements IWaybillService {
+    private List<Waybill> waybills = new ArrayList<>();
+
+    @Override
+    public void createWaybill(Waybill waybill, Order order) {
+        waybills.add(waybill);
+    }
+
+    @Override
+    public List<Waybill> getAllWaybills() {
+        return waybills;
+    }
+
+    @Override
+    public Waybill getWaybillById(int id) {
+        for (Waybill waybill : waybills) {
+            if (waybill.getWaybillId() == id) {
+                return waybill;
+            }
+        }
+        return null;
+    }
+}
+
+CustomerOrderService.java:
+
+Java
+
+@Service
+public class CustomerOrderService {
+    private final OrderService orderService;
+
+    public CustomerOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public void createOrder(Order order, Invoice invoice, Waybill waybill) {
+        orderService.createOrder(order, invoice, waybill);
+    }
+
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    public Order getOrderById(int id) {
+        return orderService.getOrderById(id);
+    }
+}
+
+HTML страницы:
+
+index.html:
+
+html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+</head>
+<body>
+    <h1>Главная страница</h1>
+    <a href="/orders">Заказы</a><br>
+    <a href="/invoices">Счета</a><br>
+    <a href="/paymentDocuments">Платежные документы</a><br>
+    <a href="/waybills">Накладные</a><br>
+</body>
+</html>
+
+orders.html:
+
+html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказы</title>
+</head>
+<body>
+    <h1>Заказы</h1>
+    <ul>
+        <li><a href="/orders/1">Заказ 1</a></li>
+        <li><a href="/orders/2">Заказ 2</a></li>
+        <li><a href="/orders/3">Заказ 3</a></li>
+    </ul>
+</body>
+</htm
+l>
+
+*invoices.html:*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Счета</title>
+</head>
+<body>
+    <h1>Счета</h1>
+    <ul>
+        <li><a href="/invoices/1">Счет 1</a></li>
+        <li><a href="/invoices/2">Счет 2</a></li>
+        <li><a href="/invoices/3">Счет 3</a></li>
+    </ul>
+</body>
+</html>
+*paymentDocuments.html:*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Платежные документы</title>
+</head>
+<body>
+    <h1>Платежные документы</h1>
+    <ul>
+        <li><a href="/paymentDocuments/1">Платежный документ 1</a></li>
+        <li><a href="/paymentDocuments/2">Платежный документ 2</a></li>
+        <li><a href="/paymentDocuments/3">Платежный документ 3</a></li>
+    </ul>
+</body>
+</html>
+*waybills.html:*
+
+html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Накладные</title>
+</head>
+<body>
+    <h1>Накладные</h1>
+    <ul>
+        <li><a href="/waybills/1">Накладная 1</a></li>
+        <li><a href="/waybills/2">Накладная 2</a></li>
+        <li><a href="/waybills/3">Накладная 3</a></li>
+    </ul>
+</body>
+</html>
